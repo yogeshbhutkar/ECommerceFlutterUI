@@ -1,8 +1,12 @@
 import 'package:ecommerce_flutter_ui/constants.dart';
 import 'package:ecommerce_flutter_ui/screens/Home/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyApp());
 }
 

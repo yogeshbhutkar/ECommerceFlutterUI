@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../../models/Products.dart';
 
-int selectedItems = 0;
+int selectedItems = 1;
 
 class DetailsBody extends StatelessWidget {
   final Product product;
@@ -83,7 +83,7 @@ class DetailsBody extends StatelessWidget {
                         ],
                       ),
                       Description(product: product),
-                      CartCounter(product: product),
+                      CartCounter(products: product),
                     ],
                   ),
                 ),
@@ -98,10 +98,10 @@ class DetailsBody extends StatelessWidget {
 }
 
 class CartCounter extends StatefulWidget {
-  final Product product;
+  final Product products;
   const CartCounter({
     Key? key,
-    required this.product,
+    required this.products,
   }) : super(key: key);
 
   @override
@@ -111,40 +111,72 @@ class CartCounter extends StatefulWidget {
 class _CartCounterState extends State<CartCounter> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        MaterialButton(
-          onPressed: () {
+        buildButton(
+          icon: Icons.remove,
+          press: () {
             setState(() {
-              if (selectedItems > 0) {
+              if (selectedItems > 1) {
                 selectedItems--;
-              } else {
-                selectedItems = 0;
               }
             });
           },
-          color: const Color.fromARGB(225, 245, 241, 241),
-          child: Icon(Icons.remove),
-          shape: const CircleBorder(),
         ),
-        Text('$selectedItems'),
-        MaterialButton(
-          onPressed: () {
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin / 2),
+          child: Text(
+            selectedItems.toString().padLeft(2, "0"),
+            style: Theme.of(context).textTheme.headline6,
+          ),
+        ),
+        buildButton(
+          icon: Icons.add,
+          press: () {
             setState(() {
               selectedItems++;
             });
           },
-          child: Icon(Icons.add),
-          shape: const CircleBorder(),
-          color: const Color.fromARGB(225, 245, 241, 241),
         ),
-        MaterialButton(
-          onPressed: () {},
-          color: const Color.fromARGB(225, 245, 241, 241),
-          child: const Text('Buy Now'),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin * 1.2),
+          child: SizedBox(
+            width: size.width * 0.5,
+            child: MaterialButton(
+              elevation: 0,
+              color: Colors.black,
+              onPressed: () {},
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20.0),
+                ),
+              ),
+              child: const Text(
+                "Buy Now",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
         )
       ],
+    );
+  }
+
+  SizedBox buildButton({required IconData icon, required VoidCallback press}) {
+    return SizedBox(
+      height: 40,
+      width: 32,
+      child: OutlinedButton(
+        child: Icon(icon),
+        onPressed: press,
+        style: OutlinedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(13),
+          ),
+        ),
+      ),
     );
   }
 }
